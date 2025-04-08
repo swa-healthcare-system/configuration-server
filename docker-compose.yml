@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  config-server:
+    build: .
+    container_name: config-server
+    restart: always
+    environment:
+      - SPRING_CLOUD_CONFIG_STORAGE_GIT_URI=https://github.com/swa-healthcare-system/configuration-storage
+      - DEFAULT_LABEL=main
+      - SERVER_PORT=8888
+    ports:
+      - "8888:8888"
+    networks:
+      - shared-net
+
+networks:
+  shared-net:
+    external: true
+    name: kafka-network
