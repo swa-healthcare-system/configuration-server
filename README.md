@@ -12,9 +12,10 @@ Configurations are stored here https://github.com/swa-healthcare-system/configur
 
 To update it you need just to push file.
 
-There is a convention that spring.application.name of your service has to match
+**There is a convention that spring.application.name of your service has to match
 config file which the server will return. So if your microservice has name
-spring.application.name=doctor-service then server will look for doctor-service.yml file.
+spring.application.name=doctor-service then server will look for doctor-service.yml
+or doctor-service.properties file.**
 
 ## Client setup
 
@@ -47,7 +48,6 @@ To set up spring boot microservice client you need to add this into pom.xml:
 ```
 
 Then you need to configure config server in application.yml/application.properties:
-Configuration file name should match name of spring application! 
 ```
 spring:
   application:
@@ -62,10 +62,33 @@ spring:
 ### Quarkus
 Here is guide how to set up quarkus client: https://quarkus.io/guides/spring-cloud-config-client
 
-Basically you need to add this dependency:
+You need to add this dependency to pom.xml:
 ```
 <dependency>
     <groupId>io.quarkus</groupId>
     <artifactId>quarkus-spring-cloud-config-client</artifactId>
 </dependency>
 ```
+and put this into application.properties:
+```
+quarkus.application.name=service-name
+quarkus.spring-cloud-config.enabled=true
+quarkus.spring-cloud-config.url=http://config-server:8888
+quarkus.log.category."io.quarkus.spring.cloud.config".level=DEBUG
+quarkus.spring-cloud-config.profiles=default
+```
+
+## Profiles
+One of the main concepts of config-server is that you can store configs for
+different profiles such as test, dev, prod etc.
+
+Spring boot by default uses "default" profile so there is no need to substantially
+modify config name in the config storage and no need to specify profiles in 
+application.yml/application.properties.
+
+Quarkus looks up "prod" profile by default, so to keep config names simple it is important
+to put this quarkus.spring-cloud-config.profiles=default into application.yml/application.properties
+
+## Testing without config-server
+Disabling of server does not work well, so if you want to test with local config props
+just comment out part related to server
