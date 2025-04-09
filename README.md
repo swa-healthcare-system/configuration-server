@@ -5,17 +5,22 @@ Spring Cloud Configuration Server implement pattern of externalized configuratio
 
 Git repository https://github.com/swa-healthcare-system/configuration-storage is used to store  all configuration files.
 
-Client microservices can load their configuration files from the server.
+Configuration server connects to configuration-storage and follows changes of configs there.
+
+Client microservices can load their configuration files via config-server.
 
 ## Configuration storage
 Configurations are stored here https://github.com/swa-healthcare-system/configuration-storage.
 
-To update it you need just to push file.
+To update it you need just to push updated config file.
 
 **There is a convention that spring.application.name of your service has to match
 config file which the server will return. So if your microservice has name
 spring.application.name=doctor-service then server will look for doctor-service.yml
 or doctor-service.properties file.**
+
+## Run configuration server
+docker-compose up --build
 
 ## Client setup
 
